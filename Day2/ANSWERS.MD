@@ -98,4 +98,32 @@ kubectl get pods --field-selector spec.nodeName=controlplane
 ```
 -screenshot ![jkkjkjk](https://user-images.githubusercontent.com/116673091/226111324-23397469-26cb-4bd1-8ce9-6a85e4dff859.png)
 
-
+---
+### 8- How many DaemonSets are created in the cluster in all namespaces?
+```bash
+controlplane $ kubectl get daemonsets
+No resources found in default namespace.
+```
+----
+### 9- what DaemonSets exist on the kube-system namespace?
+```bash
+controlplane $ kubectl get daemonsets -n kube-system
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+canal        2         2         2       2            2           kubernetes.io/os=linux   23d
+kube-proxy   2         2         2       2            2           kubernetes.io/os=linux   23d
+```
+---
+### 10- What is the image used by the POD deployed by the kube-proxy DaemonSet
+```bash
+controlplane $ k describe daemonsets kube-proxy -n kube-system | grep image
+    Image:      registry.k8s.io/kube-proxy:v1.26.1
+```
+---
+### 11- Deploy a DaemonSet for FluentD Logging. Use the given specifications. Name: elasticsearch Namespace: kube-system Image: k8s.gcr.io/fluentd-elasticsearch:1.20
+```bash 
+controlplane $ kubectl get daemonsets -n kube-system
+NAME            DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+canal           2         2         2       2            2           kubernetes.io/os=linux   23d
+elasticsearch   2         2         2       1            2           kubernetes.io/os=linux   5m11s
+kube-proxy      2         2         2       2            2           kubernetes.io/os=linux   23d
+```
