@@ -49,4 +49,53 @@ spec:
             cpu: "1"
 ```
 ### 4- How many Nodes exist on the system? 1
+---
+### 5- Do you see any taints on master? No
+```bash
+![k8sss](https://user-images.githubusercontent.com/116673091/226109051-634a3d7a-7a43-406f-83c2-612be1d9e374.png)
+```
+---
+### 6- Apply a label color=blue to the master node
+```bash
+![dasdasda](https://user-images.githubusercontent.com/116673091/226109280-2652fec0-e8af-44e3-8524-19834ea0e58b.png)
+```
+---
+### 7- Create a new deployment named blue with the nginx image and 3 replicas Set Node Affinity to the deployment to place the pods on master only NodeAffinity: requiredDuringSchedulingIgnoredDuringExecution Key: color values: blue
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+```bash 
+kubectl get pods --field-selector spec.nodeName=controlplane
+```
+-screenshot ![jkkjkjk](https://user-images.githubusercontent.com/116673091/226111324-23397469-26cb-4bd1-8ce9-6a85e4dff859.png)
+
 
